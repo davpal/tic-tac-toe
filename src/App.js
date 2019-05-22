@@ -1,26 +1,96 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Field from  './Field';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {  
+    board: Array(9).fill(null),
+    player: 'x'
+  }
+
+  onClick = (key) => {
+    console.log("key " + key);
+    const tmpBoard = [...this.state.board];
+    if(tmpBoard[key] !== null)
+      return;
+    
+    tmpBoard[key] = this.state.player;
+    this.setState({
+      board: tmpBoard
+    }, this.judge);
+  }
+
+  judge() {
+    const won = this.checkWinner();
+    console.log(won);
+    if(won) {
+      console.log("dupa");
+      alert(this.state.player + "is winner!");
+      this.newGame();
+    }
+    this.togglePlayer();
+  }
+
+  newGame() {
+    this.setState({
+      board: Array(9).fill(null),
+      player: 'x'
+    });
+  }
+
+  togglePlayer() {
+    const p = this.state.player === 'x' ? 'o' : 'x';
+    this.setState({
+      player: p
+    });
+  }
+
+  checkWinner() {
+    console.log('checking...');
+    const board = [...this.state.board];
+    const player = this.state.player;
+
+    console.log(board);
+
+    for(let i = 0; i < 3; ++i) {
+      if(board[i] === board[i+3] === board[i+6] === player)
+        return true;
+    }
+
+    for(const i of [0,3,6]) {
+      console.log(i);
+      console.log(board[i]);
+      console.log(board[i+1]);
+      console.log(board[i+2]);
+      console.log(player);
+      if(board[i] === board[i+1] === board[i+2] === player)
+        return true;
+    }
+
+    if((board[0] === board[4] === board[8] === player) || (board[2] === board[4] === board[6] === player))
+      return true;
+
+    return false;
+  }
+
+  render() {
+    const table = [0,1,2].map((i) => {
+      const row = [0,1,2].map((j) => {
+        const key = i*3 + j;
+        return <Field player={this.state.board[key]} click={() => this.onClick(key)} key={key}/>
+      });
+      return <tr key={i}>{row}</tr>;
+    });
+
+    return (
+      <div className="App">
+        <h1>Tic Tac Toe</h1>
+        <table>
+          <tbody>{table}</tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
 export default App;
