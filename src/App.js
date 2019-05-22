@@ -25,7 +25,7 @@ class App extends React.Component {
     console.log(won);
     if(won) {
       console.log("dupa");
-      alert(this.state.player + "is winner!");
+      alert(this.state.player + " is winner!");
       this.newGame();
     }
     this.togglePlayer();
@@ -53,21 +53,26 @@ class App extends React.Component {
     console.log(board);
 
     for(let i = 0; i < 3; ++i) {
-      if(board[i] === board[i+3] === board[i+6] === player)
+      if(board[i] === player && 
+         board[i+3] === player &&
+         board[i+6] === player)
         return true;
     }
 
     for(const i of [0,3,6]) {
       console.log(i);
-      console.log(board[i]);
-      console.log(board[i+1]);
-      console.log(board[i+2]);
-      console.log(player);
-      if(board[i] === board[i+1] === board[i+2] === player)
+      if(board[i] === player &&
+         board[i+1] === player &&
+         board[i+2] === player)
         return true;
     }
 
-    if((board[0] === board[4] === board[8] === player) || (board[2] === board[4] === board[6] === player))
+    if((board[0] === player &&
+        board[4] === player &&
+        board[8] === player) || 
+        (board[2] === player &&
+         board[4] === player &&
+         board[6] === player))
       return true;
 
     return false;
